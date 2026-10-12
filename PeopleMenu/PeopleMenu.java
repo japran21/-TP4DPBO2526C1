@@ -8,64 +8,59 @@ import java.awt.event.MouseEvent;
 import java.time.Year;
 import java.util.ArrayList;
 
-/**
- * PeopleMenu merupakan GUI Form utama untuk manajemen data orang (Member & Staf Gym).
- * Mengimplementasikan seluruh operasi CRUD, dialog konfirmasi hapus data,
- * dan komponen bonus JRadioButton untuk atribut Jenis Kelamin.
- */
 public class PeopleMenu extends JFrame {
     private JPanel mainPanel;
     private JLabel titleLabel;
     private JTextField idField;
     private JTextField namaField;
     private JTextField tahunLahirField;
-    private JComboBox<String> kategoriComboBox;
-    private JRadioButton lakiRadioButton;
-    private JRadioButton perempuanRadioButton;
+    private JComboBox<String> kategoriComboBox; // Dropdown buat milih kategori
+    private JRadioButton lakiRadioButton; // Tombol bulat buat cowok
+    private JRadioButton perempuanRadioButton; // ini cewe
     private JButton addUpdateButton;
     private JButton cancelButton;
     private JButton deleteButton;
-    private JTable peopleTable;
-    private JScrollPane scrollPane;
+    private JTable peopleTable; // tempat tampilin datanya bentuk tabel
+    private JScrollPane scrollPane; //tabel nya biar bisa di geser
 
-    private ButtonGroup genderGroup;
-    private ArrayList<Person> listPerson;
-    private int selectedIndex = -1;
+    private ButtonGroup genderGroup; //buat milih lanang/gadis
+    private ArrayList<Person> listPerson; //ibarat lemari jadi tempat simpan semua buku
+    private int selectedIndex = -1; // -1 ini artinya belum ada baris tabel yang diklik
 
-    // Constructor
+    // Bakal langsung dijalanin pas lu nge-run programnya
     public PeopleMenu() {
-        // Fallback inisialisasi UI jika dikompilasi manual tanpa bytecode-instrumenter IntelliJ
+        // alo tampilan belum kebentuk dari sono nya, dia bakal otomatis bikin UI pake kodingan manual di bawah
         if (mainPanel == null) {
             initUI();
         }
 
-        // Atur judul jendela
+        // Ngasih judul di bar atas window lu
         setTitle("Data Member & Staf Gym - PeopleData");
 
-        // 1. Inisialisasi listPerson
+
         listPerson = new ArrayList<>();
 
-        // 2. Isi listPerson dengan data awal (dummy)
+
         populateList();
 
-        // 3. Setup Group Radio Button untuk atribut Jenis Kelamin (BONUS +20)
+
         genderGroup = new ButtonGroup();
         genderGroup.add(lakiRadioButton);
         genderGroup.add(perempuanRadioButton);
         lakiRadioButton.setSelected(true);
 
-        // 4. Atur isi combo box Kategori
+
         String[] kategoriData = { "--- Pilih Kategori ---", "Member Reguler", "Member VIP", "Personal Trainer", "Nutrisionis" };
         kategoriComboBox.setModel(new DefaultComboBoxModel<>(kategoriData));
 
-        // 5. Isi tabel orang & styling
+
         peopleTable.setModel(setTable());
         titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 20f));
 
-        // 6. Sembunyikan tombol delete secara default
+
         deleteButton.setVisible(false);
 
-        // 7. Event Listener saat tombol Add/Update ditekan
+
         addUpdateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -85,7 +80,7 @@ public class PeopleMenu extends JFrame {
             }
         });
 
-        // 9. Event Listener saat tombol Cancel ditekan
+
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -93,21 +88,20 @@ public class PeopleMenu extends JFrame {
             }
         });
 
-        // 10. Event Listener saat baris tabel diklik
+
         peopleTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 selectedIndex = peopleTable.getSelectedRow();
                 if (selectedIndex < 0) return;
 
-                // Ambil nilai dari tabel berdasarkan baris terpilih
+
                 String curId = peopleTable.getModel().getValueAt(selectedIndex, 1).toString();
                 String curNama = peopleTable.getModel().getValueAt(selectedIndex, 2).toString();
                 String curTahunLahir = peopleTable.getModel().getValueAt(selectedIndex, 3).toString();
                 String curKategori = peopleTable.getModel().getValueAt(selectedIndex, 4).toString();
                 String curGender = peopleTable.getModel().getValueAt(selectedIndex, 5).toString();
 
-                // Tampilkan nilai ke form input
                 idField.setText(curId);
                 namaField.setText(curNama);
                 tahunLahirField.setText(curTahunLahir);
@@ -119,23 +113,23 @@ public class PeopleMenu extends JFrame {
                     perempuanRadioButton.setSelected(true);
                 }
 
-                // Ubah teks tombol menjadi "Update" dan munculkan tombol "Delete"
+
                 addUpdateButton.setText("Update");
                 deleteButton.setVisible(true);
             }
         });
     }
 
-    // Method untuk mengatur dan memuat data tabel
+
     public final DefaultTableModel setTable() {
-        // Tentukan kolom tabel
+
         Object[] cols = { "No", "ID", "Nama", "Tahun Lahir", "Kategori", "Jenis Kelamin" };
 
-        // Buat objek tabel model
+
         DefaultTableModel tmp = new DefaultTableModel(null, cols) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Tabel bersifat read-only melalui klik cell
+                return false;
             }
         };
 
@@ -156,10 +150,10 @@ public class PeopleMenu extends JFrame {
         return tmp;
     }
 
-    // Method untuk menambah data baru
+
     public void insertData() {
         try {
-            // Ambil value dari form
+
             String id = idField.getText().trim();
             String nama = namaField.getText().trim();
             String strTahun = tahunLahirField.getText().trim();
@@ -292,7 +286,6 @@ public class PeopleMenu extends JFrame {
         }
     }
 
-    // Method untuk mengosongkan form input
     public void clearForm() {
         idField.setText("");
         namaField.setText("");
@@ -316,10 +309,6 @@ public class PeopleMenu extends JFrame {
         listPerson.add(new Person("GYM-005", "Hendra Wijaya", 2001, "Member Reguler", "Laki-laki"));
     }
 
-    /**
-     * Fallback inisialisasi UI jika project dikompilasi langsung tanpa runtime IntelliJ GUI byte-code instrumenter.
-     * Memastikan aplikasi dapat di-run langsung di mana saja.
-     */
     private void initUI() {
         mainPanel = new JPanel(new BorderLayout(10, 15));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
@@ -365,7 +354,7 @@ public class PeopleMenu extends JFrame {
         cancelButton.setPreferredSize(new Dimension(85, 28));
         deleteButton.setPreferredSize(new Dimension(85, 28));
 
-        // Row 0: ID
+        //  ID
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.0;
         formGrid.add(new JLabel("ID"), gbc);
         gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 1.0;
@@ -373,7 +362,7 @@ public class PeopleMenu extends JFrame {
         gbc.gridx = 2; gbc.gridy = 0; gbc.weightx = 0.0;
         formGrid.add(addUpdateButton, gbc);
 
-        // Row 1: Nama
+        // Nama
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.0;
         formGrid.add(new JLabel("Nama"), gbc);
         gbc.gridx = 1; gbc.gridy = 1; gbc.weightx = 1.0;
@@ -381,7 +370,7 @@ public class PeopleMenu extends JFrame {
         gbc.gridx = 2; gbc.gridy = 1; gbc.weightx = 0.0;
         formGrid.add(cancelButton, gbc);
 
-        // Row 2: Tahun Lahir
+        //  Tahun Lahir
         gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.0;
         formGrid.add(new JLabel("Tahun Lahir"), gbc);
         gbc.gridx = 1; gbc.gridy = 2; gbc.weightx = 1.0;
@@ -389,7 +378,7 @@ public class PeopleMenu extends JFrame {
         gbc.gridx = 2; gbc.gridy = 2; gbc.weightx = 0.0;
         formGrid.add(deleteButton, gbc);
 
-        // Row 3: Kategori
+        // Kategori
         gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.0;
         formGrid.add(new JLabel("Kategori"), gbc);
         gbc.gridx = 1; gbc.gridy = 3; gbc.weightx = 1.0;
@@ -397,7 +386,7 @@ public class PeopleMenu extends JFrame {
         gbc.gridx = 2; gbc.gridy = 3; gbc.weightx = 0.0;
         formGrid.add(new JLabel(""), gbc);
 
-        // Row 4: Jenis Kelamin (BONUS +20)
+        //  Jenis Kelamin (BONUS +20)
         gbc.gridx = 0; gbc.gridy = 4; gbc.weightx = 0.0;
         formGrid.add(new JLabel("Jenis Kelamin"), gbc);
         gbc.gridx = 1; gbc.gridy = 4; gbc.weightx = 1.0;
@@ -415,7 +404,6 @@ public class PeopleMenu extends JFrame {
         mainPanel.add(centerPanel, BorderLayout.CENTER);
     }
 
-    // Main Method
     public static void main(String[] args) {
         // Buat object window
         PeopleMenu menu = new PeopleMenu();
