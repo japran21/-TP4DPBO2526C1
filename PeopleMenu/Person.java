@@ -1,8 +1,4 @@
-/**
- * Model class Person untuk merepresentasikan data individu (Member & Staf) pada Gym & Fitness Center.
- * Mengandung 4 atribut dasar (ID, Nama, Tahun Lahir, Kategori)
- * dan 1 atribut baru untuk BONUS (+20): Jenis Kelamin.
- */
+
 public class Person {
     private String id;
     private String nama;
@@ -10,11 +6,9 @@ public class Person {
     private String kategori;
     private String jenisKelamin;
 
-    // Default Constructor
     public Person() {
     }
 
-    // Parameterized Constructor
     public Person(String id, String nama, int tahunLahir, String kategori, String jenisKelamin) {
         this.id = id;
         this.nama = nama;
@@ -23,7 +17,7 @@ public class Person {
         this.jenisKelamin = jenisKelamin;
     }
 
-    // Getters and Setters
+   
     public String getId() {
         return id;
     }
